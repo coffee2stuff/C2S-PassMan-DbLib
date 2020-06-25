@@ -68,7 +68,7 @@ class MongoDbRepository {
             .awaitFirstOrNull()
     }
 
-    suspend fun deleteSingleDocument(type: Int, id: String): DeleteResult? {
+    suspend inline fun deleteSingleDocument(type: Int, id: String): DeleteResult? {
         val typeToCollection = mapOf(0 to "cards", 1 to "logins", 2 to "notes", 3 to "users")
         return db.getCollection(typeToCollection[type])
             .deleteOne(eq("id", id))
