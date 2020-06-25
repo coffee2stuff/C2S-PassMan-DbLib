@@ -1,0 +1,14 @@
+# IDEs
+.idea
+.vscode
+
+# Gradle
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Configs
+config.json
