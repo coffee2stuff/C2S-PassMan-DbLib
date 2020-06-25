@@ -32,6 +32,6 @@ data class CardModel(
 
     @JsonProperty("pin")
     val pinNumber: Int
-) : Model() {
-    override fun determinModelType(): Int = 0
+) : BaseModel() {
+    override fun modelType(): Int = 0
 }

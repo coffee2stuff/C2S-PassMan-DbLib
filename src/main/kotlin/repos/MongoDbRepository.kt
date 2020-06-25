@@ -5,7 +5,7 @@ import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.reactive.awaitFirst
-import models.Model
+import models.BaseModel
 import org.slf4j.LoggerFactory
 import utils.extensions.convertToBsonDocument
 import utils.retrieveConfigFile
@@ -30,8 +30,8 @@ class MongoDbRepository {
     }
 
     @Throws(Throwable::class)
-    suspend fun <T : Model> createSingleDocument(document: T): InsertOneResult? =
-        mongoDatabase.getCollection(typeToCollectionMap[document.determinModelType()])
+    suspend fun <T : BaseModel> createSingleDocument(document: T): InsertOneResult? =
+        mongoDatabase.getCollection(typeToCollectionMap[document.modelType()])
             .insertOne(document.convertToBsonDocument())
             .awaitFirst()
 

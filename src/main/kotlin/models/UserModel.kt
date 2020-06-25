@@ -17,6 +17,6 @@ data class UserModel(
 
     @JsonProperty("password")
     val password: String
-) : Model() {
-    override fun determinModelType(): Int = 3
+) : BaseModel() {
+    override fun modelType(): Int = 3
 }
