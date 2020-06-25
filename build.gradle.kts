@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(group = "com.fasterxml.jackson.core", name = "jackson-databind", version = "2.0.1")
+    implementation(group = "org.mongodb", name = "mongodb-driver-reactivestreams", version = "4.1.0-beta2")
     testImplementation("junit", "junit", "4.12")
 }
 
