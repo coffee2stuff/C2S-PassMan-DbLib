@@ -8,12 +8,16 @@ import com.mongodb.client.result.UpdateResult
 import com.mongodb.reactivestreams.client.MongoClients
 import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.reactive.awaitFirstOrNull
-import models.BaseModel
+import models.*
+import org.bson.Document
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 import org.slf4j.LoggerFactory
 import utils.extensions.convertToBsonDocument
 import utils.extensions.convertToDataClass
 import utils.extensions.toMap
 import utils.retrieveConfigFile
+import kotlin.reflect.KClass
 
 class MongoDbRepository {
 
@@ -36,12 +40,18 @@ class MongoDbRepository {
     }
 
     suspend inline fun <reified T : BaseModel> readSingleDocument(
-        type: Int,
         id: String,
         accessToken: String,
         email: String = "",
         password: String = ""
     ): T? {
+        val type = when {
+            T::class == CardModel::class -> 0
+            T::class == LoginModel::class -> 1
+            T::class == NoteModel::class -> 2
+            T::class == UserModel::class -> 3
+            else -> -1
+        }
         val typeToCollection = mapOf(0 to "cards", 1 to "logins", 2 to "notes", 3 to "users")
         return db.getCollection(typeToCollection[type])
             .find(
@@ -50,15 +60,27 @@ class MongoDbRepository {
                     eq("password", password)
                 ) else and(eq("id", id), eq("access_token", accessToken))
             )
-            .awaitFirstOrNull()?.toMap()?.convertToDataClass()
+            .awaitFirstOrNull()?.toMap()?.convertToDataClass<T>()
     }
 
-    suspend inline fun <reified T : BaseModel> readMultipleDocuments(type: Int, access_token: String): List<T>? {
+    suspend inline fun <reified T : BaseModel> readMultipleDocuments(access_token: String): List<T>? {
+        val type = when {
+            T::class == CardModel::class -> 0
+            T::class == LoginModel::class -> 1
+            T::class == NoteModel::class -> 2
+            else -> -1
+        }
         val typeToCollection = mapOf(0 to "cards", 1 to "logins", 2 to "notes")
-        return db.getCollection(typeToCollection[type])
+        val list = mutableListOf<T>()
+        val cursor = db.getCollection(typeToCollection[type])
             .find(eq("access_token", access_token))
-            .awaitFirstOrNull()
-            ?.map { (it.toMap()).convertToDataClass<T>() }
+            .awaitFirstOrNull() ?: Document("null", null)
+        println("Cursor entries: $cursor")
+        cursor.asIterable().forEach {
+            println("Iterable item: $it")
+            list.add(it.toMap().convertToDataClass())
+        }
+        return list
     }
 
     suspend inline fun <reified T : BaseModel> updateSingleDocument(id: String, document: T): UpdateResult? {
@@ -68,7 +90,14 @@ class MongoDbRepository {
             .awaitFirstOrNull()
     }
 
-    suspend inline fun deleteSingleDocument(type: Int, id: String): DeleteResult? {
+    suspend inline fun <reified T : BaseModel> deleteSingleDocument(id: String): DeleteResult? {
+        val type = when {
+            T::class == CardModel::class -> 0
+            T::class == LoginModel::class -> 1
+            T::class == NoteModel::class -> 2
+            T::class == UserModel::class -> 3
+            else -> -1
+        }
         val typeToCollection = mapOf(0 to "cards", 1 to "logins", 2 to "notes", 3 to "users")
         return db.getCollection(typeToCollection[type])
             .deleteOne(eq("id", id))
