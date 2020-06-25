@@ -20,4 +20,6 @@ data class LoginModel(
 
     @JsonProperty("url")
     val loginURL: String
-)
+) : Model() {
+    override fun determinModelType(): Int = 1
+}
