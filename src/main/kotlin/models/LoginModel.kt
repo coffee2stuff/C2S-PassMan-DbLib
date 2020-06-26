@@ -1,25 +1,27 @@
 package models
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@JsonIgnoreProperties(value = ["_id"])
 data class LoginModel(
     @JsonProperty("id")
-    val id: String,
+    val id: String?,
 
     @JsonProperty("access_token")
-    val accessToken: String,
+    val accessToken: String?,
 
     @JsonProperty("name")
-    val loginName: String,
+    val loginName: String?,
 
     @JsonProperty("username")
-    val username: String,
+    val username: String?,
 
     @JsonProperty("password")
-    val password: String,
+    val password: String?,
 
     @JsonProperty("url")
-    val loginURL: String
+    val loginURL: String?
 ) : BaseModel() {
     override fun modelType(): Int = 1
 }
