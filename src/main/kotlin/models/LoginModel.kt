@@ -23,5 +23,5 @@ data class LoginModel(
     @JsonProperty("url")
     val loginURL: String?
 ) : BaseModel() {
-    override fun modelType(): Int = 1
+    override fun modelType(): Int = 0
 }

@@ -14,5 +14,5 @@ data class NoteModel(
     @JsonProperty("contents")
     val noteContents: String
 ) : BaseModel() {
-    override fun modelType(): Int = 2
+    override fun modelType(): Int = 1
 }
