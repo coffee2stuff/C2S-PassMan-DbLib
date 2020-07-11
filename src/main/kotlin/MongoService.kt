@@ -13,6 +13,10 @@ class MongoService : KoinComponent {
         }
         return null
     }
+
+    fun fetchLogin(id: String, token: String): LoginModel {
+        return repository.readLogin(id, token)
+    }
 }
 
 data class Status(

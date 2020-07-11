@@ -1,11 +1,17 @@
 package providers
 
 import com.mongodb.client.MongoDatabase
+import com.mongodb.client.model.Filters.and
+import com.mongodb.client.model.Filters.eq
 import models.BaseModel
+import models.LoginModel
+import models.NoteModel
+import models.UserModel
 import org.slf4j.LoggerFactory
 import utils.extensions.convertToBsonDocument
+import utils.extensions.convertToDataClass
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class MongoDbProvider(val database: MongoDatabase) {
     val typeToCollection = mapOf(0 to "logins", 1 to "notes", 2 to "users")
 
@@ -18,6 +24,20 @@ class MongoDbProvider(val database: MongoDatabase) {
             .getCollection(typeToCollection[document.modelType()])
             .insertOne(document.convertToBsonDocument())
             .wasAcknowledged()
+
+    inline fun <reified T : BaseModel> readSingleDocumentByIdAndToken(id: String, token: String): T {
+        val type = when {
+            T::class == LoginModel::class -> 0
+            T::class == NoteModel::class -> 1
+            T::class == UserModel::class -> 2
+            else -> -1
+        }
+        return database
+            .getCollection(typeToCollection[type])
+            .find(and(eq("id", id), eq("access_token", token)))
+            .first()
+            .convertToDataClass()
+    }
 
     private fun configureLogging() {
         val logger = LoggerFactory.getLogger(MongoDbProvider::class.java)

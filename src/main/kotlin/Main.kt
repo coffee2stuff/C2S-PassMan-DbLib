@@ -15,5 +15,19 @@ fun main() {
 
     val uuid = generateNumericUUID()
     val accessToken = "e2bd12e6-c361-11ea-b4df-54ee75f47269"
-    service.createLogin(LoginModel(uuid, accessToken, "Gmail", "john.doe@gmail.com", "testPasswordYolo", "accounts.google.com"))
+
+    val createLoginResult = service.createLogin(
+        LoginModel(
+            uuid,
+            accessToken,
+            "Gmail",
+            "john.doe@gmail.com",
+            "testPasswordYolo",
+            "accounts.google.com"
+        )
+    )
+    println("Create login: $createLoginResult")
+
+    val readLoginResult = service.fetchLogin(uuid, accessToken)
+    println("Read login: $readLoginResult")
 }
