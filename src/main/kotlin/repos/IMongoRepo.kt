@@ -4,6 +4,15 @@ import models.LoginModel
 import models.NoteModel
 import models.UserModel
 
+/**
+ * In the typical application using Koin as a dependency injection framework, {@code single} and\
+ * {@code factory} object declarations allow you to include a type in angle brackets and a lambda
+ * expression, which defines the way the object will be constructed. Due to SOLID principles,
+ * the indicated type is usually an interface that the object to inject has to implement. This makes
+ * this object easily exchangeable in the future.
+ *
+ * This interface defines basic CRUD operations on supported models.
+ */
 interface IMongoRepo {
     fun createLogin(login: LoginModel): Boolean
     fun readLogin(id: String, token: String): LoginModel
