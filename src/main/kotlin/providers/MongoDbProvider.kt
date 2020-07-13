@@ -61,6 +61,20 @@ class MongoDbProvider(val database: MongoDatabase) {
             .convertToDataClass<UserModel>()
     }
 
+    inline fun <reified T : BaseModel> readMultipleDocuments(accessToken: String): List<T>? {
+        val type = when {
+            T::class == LoginModel::class -> 0
+            T::class == NoteModel::class -> 1
+            T::class == UserModel::class -> 2
+            else -> -1
+        }
+        return database
+            .getCollection(typeToCollection[type])
+            .find(eq("access_token", accessToken))
+            .toList()
+            .map { it.convertToDataClass<T>() }
+    }
+
     private fun configureLogging() {
         val logger = LoggerFactory.getLogger(MongoDbProvider::class.java)
         logger.info("MongoDbProvider instantiated")
