@@ -1,6 +1,7 @@
 plugins {
     java
     kotlin("jvm") version "1.3.72"
+    id("org.jetbrains.dokka") version "0.10.1"
 }
 
 group = "com.peteralexbizjak"
@@ -9,6 +10,17 @@ version = "0.0.2"
 repositories {
     mavenCentral()
     jcenter()
+}
+
+tasks {
+    val dokka by getting(org.jetbrains.dokka.gradle.DokkaTask::class) {
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
+        configuration {
+            includeNonPublic = true
+            platform = "JVM"
+        }
+    }
 }
 
 dependencies {
