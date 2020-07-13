@@ -39,6 +39,9 @@ private fun userOperations() {
     val readUserResultById = service.fetchUser(true, uuid)
     val readUserByEmailPassword = service.fetchUser(false, "john.doe@gmail.com", "myNameIsJohn")
     println("The user fetches by ID ($readUserResultById) and by email/password ($readUserByEmailPassword) should match")
+
+    val updateUserResult = service.updateUser(UserModel(uuid, accessToken, "John Smith", "john.smith-doe@gmail.com", "myNameIsJohnButMySurnameDifferent"))
+    println("Update user: $updateUserResult")
 }
 
 private fun loginOperations() {

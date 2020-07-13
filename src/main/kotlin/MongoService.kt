@@ -20,6 +20,14 @@ class MongoService : KoinComponent {
         return repository.readLogins(token)
     }
 
+    fun updateLogin(login: LoginModel): Boolean {
+        return repository.updateLogin(login.id, login)
+    }
+
+    fun deleteLoginById(id: String): Boolean {
+        return repository.deleteLogin(id)
+    }
+
     fun createNote(note: NoteModel): Boolean {
         return repository.createNote(note)
     }
@@ -32,6 +40,14 @@ class MongoService : KoinComponent {
         return repository.readNotes(token)
     }
 
+    fun updateNote(note: NoteModel): Boolean {
+        return repository.updateNote(note.id, note)
+    }
+
+    fun deleteNoteById(id: String): Boolean {
+        return repository.deleteNote(id)
+    }
+
     fun createUser(user: UserModel): Boolean {
         return repository.createUser(user)
     }
@@ -42,5 +58,13 @@ class MongoService : KoinComponent {
         } else {
             repository.readUser(queryParams[0], queryParams[1])
         }
+    }
+
+    fun updateUser(user: UserModel): Boolean {
+        return repository.updateUser(user.id, user)
+    }
+
+    fun deleteUserById(id: String): Boolean {
+        return repository.deleteUser(id)
     }
 }
