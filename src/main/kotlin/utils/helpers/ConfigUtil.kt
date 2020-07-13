@@ -1,4 +1,4 @@
-package utils
+package utils.helpers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import utils.extensions.typeReference

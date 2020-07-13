@@ -6,7 +6,7 @@ import org.koin.dsl.module
 import providers.MongoDbProvider
 import repos.IMongoRepo
 import repos.MongoRepo
-import utils.retrieveConfigFile
+import utils.helpers.retrieveConfigFile
 
 private val configFile = retrieveConfigFile()
 private val dbInstance: MongoDatabase = MongoClients
